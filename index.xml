@@ -10,6 +10,329 @@
 <atom:link href="https://ericrayanderson.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>Notes on R and Shiny by Eric Anderson.</description>
 <generator>quarto-1.11.9</generator>
-<lastBuildDate>Fri, 20 Nov 2026 21:57:01 GMT</lastBuildDate>
+<lastBuildDate>Fri, 20 Nov 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>How shinyglass gets the glass look in Shiny</title>
+  <dc:creator>Eric Anderson</dc:creator>
+  <link>https://ericrayanderson.github.io/blog/posts/2026-11-shinyglass-glass/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>shinyglass is an R package that gives Shiny apps a look close to Apple’s Liquid Glass design. Version 0.6.0 went to CRAN this month. A few people have asked how it works, so this post walks through the parts that make it look like glass and what they cost in the browser.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ericrayanderson.github.io/blog/posts/2026-11-shinyglass-glass/bslib-dashboard.png" class="img-fluid figure-img" alt="A bslib dashboard with the shinyglass theme in light mode: glass sidebar, value boxes, a plot card, and a data table"></p>
+<figcaption>A bslib dashboard with the shinyglass theme in light mode.</figcaption>
+</figure>
+</div>
+<section id="using-it" class="level2">
+<h2 class="anchored" data-anchor-id="using-it">Using it</h2>
+<p>Install it from CRAN:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"shinyglass"</span>)</span></code></pre></div></div>
+<p>On a bslib page, pass <code>glass_theme()</code> as <code>theme</code> and call <code>observe_glass()</code> in the server:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(shiny)</span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(bslib)</span>
+<span id="cb2-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(shinyglass)</span>
+<span id="cb2-4"></span>
+<span id="cb2-5">ui <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">page_sidebar</span>(</span>
+<span id="cb2-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Existing app"</span>,</span>
+<span id="cb2-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">theme =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glass_theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">preset =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"auto"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">intensity =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>),</span>
+<span id="cb2-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sidebar =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sidebar</span>(</span>
+<span id="cb2-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glass_theme_toggle</span>(),</span>
+<span id="cb2-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glass_intensity_slider</span>()</span>
+<span id="cb2-11">  ),</span>
+<span id="cb2-12">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Main column"</span></span>
+<span id="cb2-13">)</span>
+<span id="cb2-14"></span>
+<span id="cb2-15">server <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(input, output, session) {</span>
+<span id="cb2-16">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">observe_glass</span>(input, session)</span>
+<span id="cb2-17">}</span>
+<span id="cb2-18"></span>
+<span id="cb2-19"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div></div>
+<p><code>preset = "auto"</code> follows the operating system’s light or dark setting. The toggle switches between Light, Dark and Auto, and the slider runs from Ultra Clear (<code>0</code>) to Tinted (<code>1</code>). <code>observe_glass()</code> is the server side of those two controls.</p>
+</section>
+<section id="its-a-bslib-theme" class="level2">
+<h2 class="anchored" data-anchor-id="its-a-bslib-theme">It’s a bslib theme</h2>
+<p><code>glass_theme()</code> returns a normal <code>bslib::bs_theme()</code>, so it works anywhere <code>theme =</code> works: <code>page_sidebar()</code>, <code>page_navbar()</code>, <code>fluidPage()</code> or <code>navbarPage()</code>. It builds the theme in three steps.</p>
+<p>First it calls <code>bs_theme(version = 5, ...)</code> with Bootstrap variables for rounder corners, button padding and font weight. One of those is <code>"min-contrast-ratio" = 3</code>. Bootstrap’s default contrast check wants 4.5:1, and white text on Apple’s system blue (<code>#007AFF</code>) comes out around 4.02:1, so Bootstrap picks black text for primary buttons. Dropping the ratio to 3, the WCAG minimum for UI components, lets white text win on blues and purples while pale colors still get dark text.</p>
+<p>Next, <code>bs_add_variables()</code> adds the <code>$glass-*</code> Sass variables, and <code>bs_add_rules()</code> adds the package’s SCSS file. That file is over 7,000 lines now. Most of it is not glass at all. It’s per-component fixes, because every Bootstrap component has its own idea of what its background should be.</p>
+<p>Last, <code>bs_bundle()</code> attaches the JavaScript as <code>htmltools::htmlDependency()</code> objects through <code>sass::sass_layer(html = ...)</code>. The scripts travel with the theme, so there’s nothing extra to put in the UI. One of those dependencies is a small script in the page head that sets <code>data-glass-preset</code> on <code>&lt;html&gt;</code> before the first paint, which keeps dark mode from flashing white on load.</p>
+</section>
+<section id="the-blur" class="level2">
+<h2 class="anchored" data-anchor-id="the-blur">The blur</h2>
+<p>The base of every glass surface is CSS <code>backdrop-filter</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb3-1">backdrop-filter<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb3-2">  blur<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>calc<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>var<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>--glass-blur<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> var<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>--glass-diffusion<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> 1<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">.06</span><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)))</span></span>
+<span id="cb3-3">  saturate<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>var<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>--glass-saturate<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span></span>
+<span id="cb3-4">  brightness<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>var<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>--glass-refract-brightness<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> 1<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">.04</span><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span></span>
+<span id="cb3-5">  contrast<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>var<span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>--glass-refract-contrast<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> 1<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">.04</span><span class="in" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span>;</span></code></pre></div></div>
+<p>The defaults are a 36px blur and 200% saturation. Blur on its own looks like frosted plastic, though. Most of what makes a card read as glass is the edge: a stack of inset <code>box-shadow</code> lines that are light on the top and bottom and a little darker on the sides, plus a soft glow just inside the top edge. A <code>::before</code> layer on top adds gradient sheens at the top and bottom.</p>
+<p>Every one of those values is a CSS custom property. The intensity slider interpolates between two sets of values, one for Ultra Clear and one for Tinted, and writes the result on <code>:root</code>. If you want to change one directly, <code>glass_css_tokens()</code> lists them and <code>glass_theme(tokens = list(blur = "28px"))</code> overrides them without touching the SCSS.</p>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ericrayanderson.github.io/blog/posts/2026-11-shinyglass-glass/intensity-slider-clear.png" class="img-fluid figure-img" alt="The intensity demo at the Ultra Clear end of the slider"></p>
+<figcaption>Ultra Clear</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://ericrayanderson.github.io/blog/posts/2026-11-shinyglass-glass/intensity-slider-tinted.png" class="img-fluid figure-img" alt="The intensity demo at the Tinted end of the slider"></p>
+<figcaption>Tinted</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="bending-the-background" class="level2">
+<h2 class="anchored" data-anchor-id="bending-the-background">Bending the background</h2>
+<p>Chromium goes one step further. Its <code>backdrop-filter</code> accepts <code>url()</code> pointing at an SVG filter, so shinyglass builds a displacement map for each glass surface, shaped to that element’s border radius, and runs the backdrop through <code>feDisplacementMap</code>. That is what bends the background near the edges like a lens. With dispersion on, it runs three displacement passes at slightly different strengths, keeps one color channel from each, and adds them back together, which gives a faint color fringe at the rim.</p>
+<p>This is the expensive part, so it’s limited. Only the 8 highest-ranked surfaces on screen get the lens, and they have to be at least 72 by 32 pixels. Dispersion is skipped on devices that report 4 or fewer CPU cores, 4 GB of memory or less, or Save-Data mode. Safari and Firefox don’t accept <code>url()</code> there, so they get blur and tint without the lens. Honestly, the plain version still looks good, and it’s what Safari and Firefox users see.</p>
+</section>
+<section id="the-highlight-that-follows-the-mouse" class="level2">
+<h2 class="anchored" data-anchor-id="the-highlight-that-follows-the-mouse">The highlight that follows the mouse</h2>
+<p>On desktop, a soft shine follows the pointer across cards, value boxes, the navbar, menus and buttons. The JavaScript listens for <code>pointermove</code>, finds the nearest glass surface, and writes the pointer position on it as two percentages. CSS draws the shine:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">.glass-pointer-lit</span> {</span>
+<span id="cb4-2">  <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">--glass-pointer-sheen</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">radial-gradient(</span></span>
+<span id="cb4-3">    <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">circle</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">at </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">var(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">--glass-specular-x</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">%</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">)</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">var(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">--glass-specular-y</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">%</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">)</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb4-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">color-mix(</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">in srgb</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">var(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">--glass-specular-top</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">#fff</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">)</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">calc(var(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">--glass-pointer-strength</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.32</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">%</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">)</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">transparent</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">)</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">%</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb4-5">    <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">transparent</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">58</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">%</span></span>
+<span id="cb4-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">)</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="cb4-7">}</span></code></pre></div></div>
+<p>Updates go through <code>requestAnimationFrame</code> and are capped at about 30 a second. Touch input is ignored, and it stops while the tab is hidden. <code>glass_theme(pointer_specular = FALSE)</code> turns it off, and a <code>data-glass-no-pointer-specular</code> attribute turns it off for one element.</p>
+</section>
+<section id="tabs-that-slide" class="level2">
+<h2 class="anchored" data-anchor-id="tabs-that-slide">Tabs that slide</h2>
+<p>Bootstrap tabs and pills just move an <code>.active</code> class from one item to the next. For the sliding pill, shinyglass adds one <code>&lt;span class="glass-morph-indicator"&gt;</code> to each nav group, measures the active item with <code>getBoundingClientRect()</code>, and moves the span there with a CSS transform. A CSS transition does the sliding. On top of that, a short Web Animations call scales the pill to <code>1.14 0.92</code> partway through the move and back to <code>1 1</code>, so it stretches in the direction it travels and settles. The first placement on page load skips the transition, otherwise the pill would fly in from the corner.</p>
+</section>
+<section id="tint-from-the-content" class="level2">
+<h2 class="anchored" data-anchor-id="tint-from-the-content">Tint from the content</h2>
+<p>Real glass picks up color from what’s behind it. shinyglass fakes this with the app’s plots. When Shiny sends a new value to a plot output, or a plot image finishes loading, it waits 400 ms, then draws each plot image and canvas into a 72 by 72 canvas and reads the pixels back. Near-white pixels are skipped so a white plot background doesn’t wash everything out, and more saturated pixels count for more. The average color becomes the tint for the glass fills, and the intensity slider still decides how strong it is.</p>
+<p>A small gotcha if you try this yourself: drawing an image from another origin into a canvas and reading it back throws a security error. The sampler catches that and skips the image, so a plot served from somewhere else just doesn’t add to the tint.</p>
+</section>
+<section id="reduced-motion-and-other-system-settings" class="level2">
+<h2 class="anchored" data-anchor-id="reduced-motion-and-other-system-settings">Reduced motion and other system settings</h2>
+<p>Every moving part checks <code>prefers-reduced-motion</code>. When it’s on, the pointer shine is off, the tab pill jumps instead of sliding, button press springs and the ambient sheen stop, and tint sampling doesn’t run. <code>glass_theme(motion = FALSE)</code> does the same thing for every visitor. The system setting takes priority over theme options, so a visitor with reduced motion on never gets the animations even if the app asks for them.</p>
+<p>Reduced transparency in the OS gets solid fills with no backdrop blur. Increased contrast and forced colors also turn off the lens and override the glass colors.</p>
+</section>
+<section id="phones" class="level2">
+<h2 class="anchored" data-anchor-id="phones">Phones</h2>
+<p>The same app works on a phone with no extra code. Controls are sized for touch (the slider thumb gets bigger on coarse pointers), sidebars and popovers open and close the way you’d expect, and pages don’t scroll sideways. The mouse highlight is desktop only, since there’s no pointer to follow. Each live demo has a Phone view button that shows the app in a phone-sized frame.</p>
+</section>
+<section id="try-it" class="level2">
+<h2 class="anchored" data-anchor-id="try-it">Try it</h2>
+<p>Two of the hosted demos:</p>
+<ul>
+<li><a href="https://ericrayanderson.shinyapps.io/glass-olympics/">Olympic medals</a>, dreamRs’ <a href="https://github.com/dreamRs/shinyapps/tree/main/olympic-medals">olympic-medals</a> app with the shinyglass theme</li>
+<li><a href="https://ericrayanderson.shinyapps.io/glass-dashboard/">Dashboard</a>, cards, plots and tables on bslib</li>
+</ul>
+<p>They may take a few seconds to wake up. The <a href="https://ericrayanderson.github.io/shinyglass/">documentation</a> has the <a href="https://ericrayanderson.github.io/shinyglass/articles/theming.html">theming guide</a> and a list of supported widgets, and the source is on <a href="https://github.com/ericrayanderson/shinyglass">GitHub</a>. If something looks off in your app, an issue with a screenshot helps a lot. Bootstrap components I haven’t tried yet are the most likely place for it to break.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Shiny</category>
+  <guid>https://ericrayanderson.github.io/blog/posts/2026-11-shinyglass-glass/</guid>
+  <pubDate>Fri, 20 Nov 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://ericrayanderson.github.io/blog/posts/2026-11-shinyglass-glass/bslib-dashboard.png" medium="image" type="image/png" height="91" width="144"/>
+</item>
 </channel>
 </rss>
