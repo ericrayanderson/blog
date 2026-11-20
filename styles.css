@@ -1,0 +1,12 @@
+body {
+  font-size: 1.05rem;
+}
+
+.quarto-title-meta-heading {
+  font-weight: 600;
+}
+
+figure img,
+p > img {
+  border-radius: 6px;
+}
