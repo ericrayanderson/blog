@@ -1,0 +1,16 @@
+---
+title: "About"
+about:
+  template: solana
+  links:
+    - icon: github
+      text: GitHub
+      href: https://github.com/ericrayanderson
+    - icon: globe
+      text: ericrayanderson.com
+      href: https://ericrayanderson.com
+---
+
+I'm Eric Anderson, a data scientist who works in R and Shiny. I maintain [shinyglass](https://ericrayanderson.github.io/shinyglass/), a theming package for Shiny apps.
+
+This blog is where I write about R packages I build and things I run into while building Shiny apps. There is an [RSS feed](index.xml) for all posts.

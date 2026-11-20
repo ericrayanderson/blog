@@ -1,0 +1,4 @@
+# options apply to all posts in this folder
+freeze: true
+author: "Eric Anderson"
+title-block-banner: false

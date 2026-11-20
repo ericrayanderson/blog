@@ -1,0 +1,25 @@
+project:
+  type: website
+
+website:
+  title: "Eric Anderson"
+  site-url: https://ericrayanderson.github.io/blog/
+  description: "Notes on R and Shiny by Eric Anderson."
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/ericrayanderson
+        aria-label: GitHub
+      - icon: rss
+        href: index.xml
+        aria-label: RSS feed
+  page-footer:
+    left: "© 2026 Eric Anderson"
+    right: "More R blogs at [R-bloggers](https://www.r-bloggers.com/)"
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    highlight-style: github
