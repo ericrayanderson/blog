@@ -4,7 +4,6 @@ description: "Backdrop blur, an SVG lens, a highlight that follows the mouse, an
 date: "2026-11-20"
 categories: [R, Shiny]
 image: bslib-dashboard.png
-draft: true
 ---
 
 shinyglass is an R package that gives Shiny apps a look close to Apple's Liquid Glass design. Version 0.6.0 went to CRAN this month. A few people have asked how it works, so this post walks through the parts that make it look like glass and what they cost in the browser.
