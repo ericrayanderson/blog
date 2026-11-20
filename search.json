@@ -7,6 +7,13 @@
     "text": "How shinyglass gets the glass look in Shiny\n\n\n\nR\n\nShiny\n\n\n\n\nBackdrop blur, an SVG lens, a highlight that follows the mouse, and the settings that switch it all off. A look inside a bslib theme.\n\n\n\n\n\n\nNov 20, 2026\n\n\nEric Anderson\n\n\n\n\n\nNo matching items"
   },
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "I’m Eric Anderson, a data scientist who works in R and Shiny. I maintain shinyglass, a theming package for Shiny apps.\nThis blog is where I write about R packages I build and things I run into while building Shiny apps. There is an RSS feed for all posts."
+  },
+  {
     "objectID": "posts/2026-11-shinyglass-glass/index.html",
     "href": "posts/2026-11-shinyglass-glass/index.html",
     "title": "How shinyglass gets the glass look in Shiny",
@@ -82,12 +89,5 @@
     "title": "How shinyglass gets the glass look in Shiny",
     "section": "Try it",
     "text": "Try it\nTwo of the hosted demos:\n\nOlympic medals, dreamRs’ olympic-medals app with the shinyglass theme\nDashboard, cards, plots and tables on bslib\n\nThey may take a few seconds to wake up. The documentation has the theming guide and a list of supported widgets, and the source is on GitHub. If something looks off in your app, an issue with a screenshot helps a lot. Bootstrap components I haven’t tried yet are the most likely place for it to break."
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "I’m Eric Anderson, a data scientist who works in R and Shiny. I maintain shinyglass, a theming package for Shiny apps.\nThis blog is where I write about R packages I build and things I run into while building Shiny apps. There is an RSS feed for all posts."
   }
 ]
