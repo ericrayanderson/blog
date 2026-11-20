@@ -110,7 +110,7 @@ The original used `column(width = 8, offset = 2)` for the whole card, which leav
 
 ### Two leftovers from the original
 
-The favicon pointed at `rings.png`, but the file in `www/` is `rings.jpg`, so that link was fixed in both copies. `library("shinydashboard")` was loaded but not used, and it's gone from the glass version.
+The favicon pointed at `rings.png`, but the file in `www/` is `rings.jpg`, so both shinyglass copies of the app point at `rings.jpg`. `library("shinydashboard")` was loaded but not used, and it's gone from the glass version.
 
 ## What I haven't fixed
 
@@ -128,4 +128,4 @@ If you try `glass_theme()` on an app you already have, these are the things this
 - Try it at phone width. shinyglass handles the touch sizes and keeps pages from scrolling sideways, but your own column widths still decide whether filters stack or squeeze.
 - Turn on reduced motion and reduced transparency in your OS settings and look again. The app should still be readable with solid fills and no animation.
 
-The live demo is at <https://ericrayanderson.shinyapps.io/glass-olympics/>. It's on a free shinyapps.io plan, so it can take a few seconds to wake up. On a desktop, the Phone view button shows it in a phone-sized frame. The full source is in the [shinyglass repository](https://github.com/ericrayanderson/shinyglass/tree/main/inst/shinyapps/olympic-medals), next to the original dreamRs files, and the package docs are at <https://ericrayanderson.github.io/shinyglass/>. Thanks to dreamRs for publishing these apps under an open license. It made this kind of comparison easy to do.
+The live demo is at <https://ericrayanderson.shinyapps.io/glass-olympics/>. It can take a few seconds to wake up. On a desktop, the Phone view button shows it in a phone-sized frame. The full source is in the [shinyglass repository](https://github.com/ericrayanderson/shinyglass/tree/main/inst/shinyapps/olympic-medals), next to the original dreamRs files, and the package docs are at <https://ericrayanderson.github.io/shinyglass/>. Thanks to dreamRs for publishing these apps under an open license. It made this kind of comparison easy to do.
